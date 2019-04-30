@@ -79,7 +79,10 @@ public class CDRController {
 			Calendar c = Calendar.getInstance();
 			c.setTime(currentDate);
 			c.add(Calendar.HOUR_OF_DAY, -24);
-			page = cdrService.findByDateAddedBetween(c.getTime(), currentDate, pageRequest);
+			Calendar nextDay = Calendar.getInstance();
+			nextDay.setTime(currentDate);
+			nextDay.add(Calendar.HOUR_OF_DAY, 24);
+			page = cdrService.findByDateAddedBetween(c.getTime(), nextDay.getTime(), pageRequest);
 		}
 
 		return new ResponseEntity<Page<Cdr>>(page, HttpStatus.OK);
@@ -93,7 +96,10 @@ public class CDRController {
 		Calendar c = Calendar.getInstance();
 		c.setTime(currentDate);
 		c.add(Calendar.HOUR_OF_DAY, -24);
-		return new ResponseEntity<List<CDRCountDTO>>(cdrService.getMessageCount(currentDate, c.getTime()),
+		Calendar nextDay = Calendar.getInstance();
+		nextDay.setTime(currentDate);
+		nextDay.add(Calendar.HOUR_OF_DAY, 24);
+		return new ResponseEntity<List<CDRCountDTO>>(cdrService.getMessageCount(c.getTime(), nextDay.getTime()),
 				HttpStatus.OK);
 	}
 	
