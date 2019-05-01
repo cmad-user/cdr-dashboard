@@ -98,7 +98,7 @@ public class CDRController {
 		c.add(Calendar.HOUR_OF_DAY, -24);
 		Date startDate = getStartDate();
 		Date endDate = getEndDate();
-		return new ResponseEntity<List<CDRCountDTO>>(cdrService.getMessageCount(startDate, endDate),
+		return new ResponseEntity<List<CDRCountDTO>>(cdrService.getMessageCount(endDate, startDate),
 				HttpStatus.OK);
 	}
 	
@@ -112,7 +112,7 @@ public class CDRController {
 		c.add(Calendar.HOUR_OF_DAY, -24);
 		Date startDate = getStartDate();
 		Date endDate = getEndDate();
-		return new ResponseEntity<List<AcctDataUsageDTO>>(cdrService.fetchAcctDataUsage(operatorId.orElse(null), startDate, endDate),
+		return new ResponseEntity<List<AcctDataUsageDTO>>(cdrService.fetchAcctDataUsage(operatorId.orElse(null), endDate, startDate),
 				HttpStatus.OK);
 	}
 	
