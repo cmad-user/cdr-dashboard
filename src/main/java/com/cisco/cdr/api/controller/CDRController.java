@@ -2,6 +2,7 @@ package com.cisco.cdr.api.controller;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,10 +80,9 @@ public class CDRController {
 			Calendar c = Calendar.getInstance();
 			c.setTime(currentDate);
 			c.add(Calendar.HOUR_OF_DAY, -24);
-			Calendar nextDay = Calendar.getInstance();
-			nextDay.setTime(currentDate);
-			nextDay.add(Calendar.HOUR_OF_DAY, 24);
-			page = cdrService.findByDateAddedBetween(c.getTime(), nextDay.getTime(), pageRequest);
+			Date startDate = getStartDate();
+			Date endDate = getEndDate();
+			page = cdrService.findByDateAddedBetween(startDate, endDate, pageRequest);
 		}
 
 		return new ResponseEntity<Page<Cdr>>(page, HttpStatus.OK);
@@ -96,10 +96,9 @@ public class CDRController {
 		Calendar c = Calendar.getInstance();
 		c.setTime(currentDate);
 		c.add(Calendar.HOUR_OF_DAY, -24);
-		Calendar nextDay = Calendar.getInstance();
-		nextDay.setTime(currentDate);
-		nextDay.add(Calendar.HOUR_OF_DAY, 24);
-		return new ResponseEntity<List<CDRCountDTO>>(cdrService.getMessageCount(c.getTime(), nextDay.getTime()),
+		Date startDate = getStartDate();
+		Date endDate = getEndDate();
+		return new ResponseEntity<List<CDRCountDTO>>(cdrService.getMessageCount(startDate, endDate),
 				HttpStatus.OK);
 	}
 	
@@ -111,8 +110,20 @@ public class CDRController {
 		Calendar c = Calendar.getInstance();
 		c.setTime(currentDate);
 		c.add(Calendar.HOUR_OF_DAY, -24);
-		return new ResponseEntity<List<AcctDataUsageDTO>>(cdrService.fetchAcctDataUsage(operatorId.orElse(null), currentDate, c.getTime()),
+		Date startDate = getStartDate();
+		Date endDate = getEndDate();
+		return new ResponseEntity<List<AcctDataUsageDTO>>(cdrService.fetchAcctDataUsage(operatorId.orElse(null), startDate, endDate),
 				HttpStatus.OK);
+	}
+	
+	private Date getStartDate(){
+		Date date = new GregorianCalendar(2000, Calendar.JANUARY, 11).getTime();
+		return date;
+	}
+	
+	private Date getEndDate(){
+		Date date = new GregorianCalendar(2099, Calendar.JANUARY, 11).getTime();
+		return date;
 	}
 
 }
